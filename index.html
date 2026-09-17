@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quinn · Quinnessential Yoga</title>
+  <meta name="description" content="Hatha-based yoga with Quinn — Breathe • Align • Ground. 20+ years of practice. RYT-200." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Light theme */
+      --bg: #f7f4ef;
+      --bg-card: #ffffff;
+      --text: #1c1917;
+      --text-muted: #57534e;
+      --accent: #4a7c59;
+      --accent-soft: #e8f0ea;
+      --border: #e7e5e4;
+      --shadow: 0 4px 24px rgba(28, 25, 23, 0.06);
+      --shadow-hover: 0 8px 32px rgba(28, 25, 23, 0.1);
+      --btn-bg: #ffffff;
+      --btn-border: #e7e5e4;
+      --btn-hover: #f5f5f4;
+      --icon-bg: #f5f5f4;
+      --toggle-bg: #e7e5e4;
+      --toggle-knob: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1c1917;
+      --bg-card: #292524;
+      --text: #fafaf9;
+      --text-muted: #a8a29e;
+      --accent: #86b894;
+      --accent-soft: #2d3b32;
+      --border: #44403c;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --btn-bg: #292524;
+      --btn-border: #44403c;
+      --btn-hover: #3f3a36;
+      --icon-bg: #3f3a36;
+      --toggle-bg: #44403c;
+      --toggle-knob: #fafaf9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1.25rem 3rem;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--toggle-bg);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 3px;
+      transition: background 0.3s ease;
+      z-index: 100;
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .theme-toggle .knob {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--toggle-knob);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 12px;
+    }
+
+    [data-theme="dark"] .theme-toggle .knob {
+      transform: translateX(24px);
+    }
+
+    /* Main container */
+    .container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      animation: fadeUp 0.6s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Avatar */
+    .avatar-wrap {
+      position: relative;
+      margin-top: 0.5rem;
+    }
+
+    .avatar {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--bg-card);
+      box-shadow: var(--shadow);
+      background: var(--accent-soft);
+      display: block;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .avatar:hover {
+      transform: scale(1.03);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Fallback initials avatar */
+    .avatar-fallback {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #4a7c59 0%, #2d5a3d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fafaf9;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 2.75rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      box-shadow: var(--shadow);
+      border: 3px solid var(--bg-card);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .avatar-fallback:hover {
+      transform: scale(1.03);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Name & bio */
+    .profile {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .name {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.85rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .handle {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .bio {
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+      max-width: 320px;
+      margin: 0.35rem auto 0;
+    }
+
+    .tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+
+    .tagline span {
+      opacity: 0.5;
+    }
+
+    /* Links */
+    .links {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      width: 100%;
+      padding: 0.95rem 1.15rem;
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      transition:
+        transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.22s ease,
+        background 0.22s ease,
+        border-color 0.22s ease;
+    }
+
+    .link-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      background: var(--btn-hover);
+      border-color: var(--accent);
+    }
+
+    .link-btn:active {
+      transform: translateY(0);
+    }
+
+    .link-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .link-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--icon-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.22s ease;
+    }
+
+    .link-btn:hover .link-icon {
+      background: var(--accent-soft);
+    }
+
+    .link-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .link-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .link-arrow {
+      opacity: 0.35;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .link-btn:hover .link-arrow {
+      opacity: 0.7;
+      transform: translateX(3px);
+    }
+
+    .link-arrow svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Social icons row */
+    .socials {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      justify-content: center;
+    }
+
+    .social-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition:
+        transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.22s ease,
+        background 0.22s ease,
+        border-color 0.22s ease;
+    }
+
+    .social-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: var(--shadow-hover);
+      background: var(--btn-hover);
+      border-color: var(--accent);
+    }
+
+    .social-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .social-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.22s ease;
+    }
+
+    .social-btn:hover svg {
+      stroke: var(--accent);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.7;
+      text-align: center;
+    }
+
+    /* Subtle grain overlay for polish */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container,
+    .theme-toggle {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Responsive tweaks */
+    @media (min-width: 480px) {
+      body {
+        padding: 3rem 1.5rem 4rem;
+      }
+      .name {
+        font-size: 2.1rem;
+      }
+      .avatar,
+      .avatar-fallback {
+        width: 124px;
+        height: 124px;
+      }
+      .avatar-fallback {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+    <span class="knob" id="themeKnob">
+      <!-- sun/moon injected by JS -->
+    </span>
+  </button>
+
+  <main class="container">
+    <!-- Avatar: replace src with your photo path when ready -->
+    <div class="avatar-wrap">
+      <!-- Uncomment and set src when you have a headshot:
+      <img class="avatar" src="your-photo.jpg" alt="Quinn" width="124" height="124" />
+      -->
+      <div class="avatar-fallback" aria-hidden="true">Q</div>
+    </div>
+
+    <div class="profile">
+      <h1 class="name">Quinn</h1>
+      <p class="handle">@quinnessentialsyoga</p>
+      <p class="bio">
+        RYT-200 · 20+ years of practice.<br />
+        Hatha-based yoga for a calmer mind,<br />
+        stronger body, and more connected you.
+      </p>
+      <p class="tagline">
+        Breathe <span>·</span> Align <span>·</span> Ground
+      </p>
+    </div>
+
+    <nav class="links" aria-label="Featured links">
+      <a class="link-btn" href="https://quinnessentialsyoga.com" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </span>
+        <span class="link-text">Website</span>
+        <span class="link-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a class="link-btn" href="https://www.youtube.com/@quinnessentialsyoga" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="link-text">YouTube Channel</span>
+        <span class="link-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a class="link-btn" href="mailto:quinnessentialsyoga@gmail.com">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </span>
+        <span class="link-text">Email / Book a Class</span>
+        <span class="link-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a class="link-btn" href="sms:+15307778517">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </span>
+        <span class="link-text">Text Quinn</span>
+        <span class="link-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+    </nav>
+
+    <div class="socials" aria-label="Social links">
+      <a class="social-btn" href="https://www.youtube.com/@quinnessentialsyoga" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="social-btn" href="mailto:quinnessentialsyoga@gmail.com" aria-label="Email">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </a>
+      <a class="social-btn" href="https://quinnessentialsyoga.com" target="_blank" rel="noopener noreferrer" aria-label="Website">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </a>
+    </div>
+
+    <button type="button" class="link-btn share-btn" id="shareBtn" style="margin-top: 0.25rem; cursor: pointer; border: 1px solid var(--btn-border); font-family: inherit;">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+      </span>
+      <span class="link-text" id="shareBtnText">Share this page</span>
+      <span class="link-arrow">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </span>
+    </button>
+
+    <p class="footer">Quinnessential Yoga · All are welcome</p>
+  </main>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const toggle = document.getElementById("themeToggle");
+      const knob = document.getElementById("themeKnob");
+
+      const sun = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`;
+      const moon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+      function applyTheme(theme) {
+        root.setAttribute("data-theme", theme);
+        knob.innerHTML = theme === "dark" ? moon : sun;
+        localStorage.setItem("theme", theme);
+      }
+
+      // Prefer saved → system preference → light
+      const saved = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      applyTheme(saved || (prefersDark ? "dark" : "light"));
+
+      toggle.addEventListener("click", () => {
+        const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        applyTheme(next);
+      });
+
+      // Share this page
+      const shareBtn = document.getElementById("shareBtn");
+      const shareBtnText = document.getElementById("shareBtnText");
+
+      shareBtn.addEventListener("click", async () => {
+        const shareData = {
+          title: "Quinn · Quinnessential Yoga",
+          text: "Hatha-based yoga with Quinn — Breathe · Align · Ground",
+          url: window.location.href
+        };
+
+        if (navigator.share) {
+          try {
+            await navigator.share(shareData);
+          } catch (err) {
+            // User cancelled or share failed — do nothing
+          }
+        } else {
+          // Fallback: copy link to clipboard
+          try {
+            await navigator.clipboard.writeText(window.location.href);
+            shareBtnText.textContent = "Link copied!";
+            setTimeout(() => {
+              shareBtnText.textContent = "Share this page";
+            }, 2000);
+          } catch (err) {
+            // Last resort
+            prompt("Copy this link:", window.location.href);
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
